@@ -23,9 +23,13 @@ export class UptimeController {
   }
 
   async notifyAll(event) {
-    await Promise.allSettled(
+    const results = await Promise.allSettled(
       this.notifiers.map((notifier) => notifier.send(event)),
     );
+
+    results
+      .filter((result) => result.status === 'rejected')
+      .forEach((result) => console.error('Notifier failed:', result.reason));
   }
 
   async announceBoot() {
