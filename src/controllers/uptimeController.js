@@ -42,7 +42,9 @@ export class UptimeController {
     const isReachable = await this.networkChecker.isReachable();
     const currentStatus = isReachable ? InternetStatus.UP : InternetStatus.DOWN;
 
-    await this.logStore.append(timestampIso, buildStatusLine({ status: currentStatus, timestampIso }));
+    const statusLine = buildStatusLine({ status: currentStatus, timestampIso });
+    await this.logStore.append(timestampIso, statusLine);
+    console.log(statusLine);
 
     const transitionEvent = determineTransitionEvent({
       previousStatus: this.previousStatus,
